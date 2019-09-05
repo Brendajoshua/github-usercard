@@ -5,14 +5,42 @@
 
 //const axios = require("axios");
 console.log(`curl -u "Brendajoshua" https://api.github.com`);
-let userInfo = {}
+/*let userInfo = {}
 axios.get("https://api.github.com/users/Brendajoshua")
 .then(response => {
   console.log(createCard(response.data))
 })
 .catch(error => {
   console.error(error)
+})*/
+const cardsSection = document.querySelector(".cards");
+axios.get("https://api.github.com/users/Brendajoshua")
+.then(userData => {
+  //task5
+  let followersArray = [];
+  axios.get(`https://api.github.com/users/Brendajoshua/followers`)
+.then(followers => {
+  followersArray = followers.data.map(follower => follower.login)
+
+//
+  followersArray.forEach(followerLogin => {
+    axios.get(`https://api.github.com/users/${followerLogin}`) 
+    .then(followerData => {
+      cardsSection.appendChild(createCard(followerData.data))
+    })
+    .catch(error => console.error(error))
+  })
 })
+  .catch(error => console.error(error))
+  cardsSection.appendChild(createCard(userData.data));
+  
+})
+.catch(error => {
+  console.error(error)
+})
+
+
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -34,7 +62,7 @@ axios.get("https://api.github.com/users/Brendajoshua")
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -103,8 +131,10 @@ function createCard(user) {
   card.appendChild(img);
   card.appendChild(cardInfo);
 
+  //task 4
   return card;
 }
+
 
 /* List of LS Instructors Github username's: 
   tetondan
