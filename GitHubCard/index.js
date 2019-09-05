@@ -3,6 +3,16 @@
            https://api.github.com/users/<your name>
 */
 
+//const axios = require("axios");
+console.log(`curl -u "Brendajoshua" https://api.github.com`);
+let userInfo = {}
+axios.get("https://api.github.com/users/Brendajoshua")
+.then(response => {
+  console.log(createCard(response.data))
+})
+.catch(error => {
+  console.error(error)
+})
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -45,6 +55,56 @@ const followersArray = [];
 </div>
 
 */
+function createCard(user) {
+  console.log(user)
+  const card = document.createElement("div");
+  card.classList.add("card");
+
+  const img = document.createElement("img");
+  img.setAttribute ("src", user["avatar_url"]);
+
+  const cardInfo = document.createElement("div");
+  cardInfo.classList.add("card-info");
+
+  //h3
+  const h3 = document.createElement("h3");
+  h3.classList.add("name");
+  h3.textContent = user.name;
+
+  const pTags = [];
+  for (let i = 0; i < 6; i++){
+    pTags.push(document.createElement("p"));
+  }
+
+  //paragraphs
+  pTags[0].classList.add("username");
+  pTags[0].textContent = user.login;
+
+  pTags[1].textContent = `Location: ${user.location}`;
+
+  pTags[2].textContent = `profile: `;
+
+  const a = document.createElement("a");
+  const aURL = user["html_url"];
+  a.setAttribute("href", aURL);
+  a.href = aURL;
+  a.textContent = aURL;
+  pTags[2].appendChild(a);
+
+  pTags[3].textContent = `Followers: ${user.followers}`
+
+  pTags[4].textContent = `Following: ${user.following}`
+
+  pTags[5].textContent = `Bio: ${user.bio}`
+
+//append
+  cardInfo.appendChild(h3);
+  pTags.forEach(p => cardInfo.appendChild(p));
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+
+  return card;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
